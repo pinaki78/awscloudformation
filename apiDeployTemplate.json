@@ -1,66 +1,81 @@
 {
-  "AWSTemplateFormatVersion": "2018-06-06",
-  "Description": "Lambda and API Gateway implementation for IOT",
-  "Resources": {
-    "RestApi": {
-  "Type": "AWS::ApiGateway::RestApi",
-  "Properties": {
-    "Name": "ActivateIOT"
-  }
-}
-"UsersResource": {
-  "Type": "AWS::ApiGateway::Resource",
-  "Properties": {
-    "RestApiId": {"Ref": "RestApi"},
-    "ParentId": {"Fn::GetAtt": ["RestApi", "RootResourceId"]},
-    "PathPart": "Activate"
-  }
-},
-"ActivateIOT": {
-  "Type": "AWS::ApiGateway::Method",
-  "Properties": {
-    "Integration": {
-      "Type": "AWS",
-      "IntegrationHttpMethod": "POST",
-      "Uri": {"Fn::Join" : ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2018-06-06/functions/", {"Fn::GetAtt": ["Lambda", "Arn"]}, "/invocations"]]},
-      "IntegrationResponses": [{
-       "ResponseTemplates": {
-      "application/json": "$input.json('$.body')"
-    },
-    "ResponseParameters": {
-      "method.response.header.Link": "integration.response.body.headers.next"
-    },
-    "StatusCode": 200
-  }],
-   
-    "MethodResponses": [{
-      "ResponseModels": {
-        "application/json": {"Ref": "IOTModel"}
-      },
-      "ResponseParameters": {
-        "method.response.header.Link": true
-      },
-      "StatusCode": 200
-    }]
-  }
-}
+	"AWSTemplateFormatVersion": "2018-06-06",
+	"Description": "Lambda and API Gateway implementation for IOT",
+	"Resources": {
+		"RestApi": {
+			"Type": "AWS::ApiGateway::RestApi",
+			"Properties": {
+				"Name": "ActivateIOT"
+			}
+
+		},
+		"UsersResource": {
+			"Type": "AWS::ApiGateway::Resource",
+			"Properties": {
+				"RestApiId": {
+					"Ref": "RestApi"
+				},
+				"ParentId": {
+					"Fn::GetAtt": ["RestApi", "RootResourceId"]
+				},
+				"PathPart": "Activate"
+			}
+		},
+		"ActivateIOT": {
+			"Type": "AWS::ApiGateway::Method",
+			"Properties": {
+				"Integration": {
+					"Type": "AWS",
+					"IntegrationHttpMethod": "POST",
+					"Uri": {
+						"Fn::Join": ["", ["arn:aws:apigateway:", {
+							"Ref": "AWS::Region"
+						}, ":lambda:path/2018-06-06/functions/", {
+							"Fn::GetAtt": ["Lambda", "Arn"]
+						}, "/invocations"]]
+					},
+					"IntegrationResponses": [{
+						"ResponseTemplates": {
+							"application/json": "$input.json('$.body')"
+						},
+						"ResponseParameters": {
+							"method.response.header.Link": "integration.response.body.headers.next"
+						},
+						"StatusCode": 200
+					}],
+
+					"MethodResponses": [{
+						"ResponseModels": {
+							"application/json": {
+								"Ref": "IOTModel"
+							}
+						},
+						"ResponseParameters": {
+							"method.response.header.Link": true
+						},
+						"StatusCode": 200
+					}]
+				}
+			},
 
 
-"Deployment": {
-  "Type": "AWS::ApiGateway::Deployment",
-  "Properties": {
-    "RestApiId": { "Ref": "ActivateIOTDevice" },
-    "Description": "My deployment",
-    "StageName": "PreProd",
-    "StageDescription": {
-      "StageName": "PreProd",
-      "Description": "PreProd Stage",
-      "CacheClusterEnabled": "true",
-      "CacheClusterSize": "1.6"
-    }
-  },
-  "DependsOn": ["activate"]    
-}
-  }
-}
+			"Deployment": {
+				"Type": "AWS::ApiGateway::Deployment",
+				"Properties": {
+					"RestApiId": {
+						"Ref": "ActivateIOTDevice"
+					},
+					"Description": "My deployment",
+					"StageName": "PreProd",
+					"StageDescription": {
+						"StageName": "PreProd",
+						"Description": "PreProd Stage",
+						"CacheClusterEnabled": "true",
+						"CacheClusterSize": "1.6"
+					}
+				},
+				"DependsOn": ["activate"]
+			}
+		}
+	}
 }
