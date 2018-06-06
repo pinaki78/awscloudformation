@@ -15,7 +15,6 @@
           "Default": "iot-backend"
         }
     },
-
     "Resources" : {
         "TestClientUser" : {
             "Type" : "AWS::IAM::User"
