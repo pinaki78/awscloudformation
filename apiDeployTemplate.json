@@ -19,7 +19,6 @@
 "ActivateIOT": {
   "Type": "AWS::ApiGateway::Method",
   "Properties": {
-    [...]
     "Integration": {
       "Type": "AWS",
       "IntegrationHttpMethod": "POST",
